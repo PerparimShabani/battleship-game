@@ -1,64 +1,45 @@
 # Battleship Game
 
-This is a simple implementation of the classic Battleship game using Python. The game is played on a 5x5 grid where the player tries to guess the location of a hidden ship.
+This is a simple implementation of the classic Battleship game using Python. The game is played on a 5x5 grid where the player tries to guess the location of a hidden ship within 10 turns.
 
-## Features 
+## Features
 
+- 5x5 game board
 - Random ship placement
-- 5 turns to find the ship
-- Input validation 
-- Simple command-line interface
-
-## Development Process
-
-This project was developed using Visual Studio Code on a Windows computer. The development process included:
-
-1. Setting up the development environment
-2. Creating the main game logic
-3. Implementing input validation and error handling
-4. Adding comments and improving code readability
-5. Creating documentation (README.md)
-6. Using Git for version control
+- 10 turns to find the ship
+- Input validation and error handling
 
 ## How to Play
 
 1. Run the `battleship.py` file using Python.
-2. Enter row and column numbers (0-4) to guess the ship's location.
-3. You have 5 turns to find the ship.
-4. 'X' marks your previous guesses on the board.
-
-## Requirements
-
-- Python 3.x
+2. The game will display an empty 5x5 grid.
+3. Enter row and column numbers (0-4) to guess the ship's location.
+4. The game will inform you if you've hit or missed the ship.
+5. Try to sink the ship within 10 turns!
 
 ## Installation
 
-1. Clone this repository:
-   ```
-   git clone https://github.com/PerparimShabani/battleship-game.git
-   ```
-2. Navigate to the project directory:
-   ```
-   cd battleship-game
-   ```
-3. Run the game:
-   ```
-   python battleship.py
-   ```
+1. Ensure you have Python installed on your system.
+2. Clone this repository or download the `battleship.py` file.
+3. Run the game using the command: `python battleship.py`
 
 ## Development Process
 
-This project was developed using Visual Studio Code on a Windows computer. The development process included:
+This game was developed using Python and follows object-oriented programming principles. The main components include:
 
-1. Setting up the development environment
-2. Creating the main game logic
-3. Implementing input validation and error handling
-4. Adding comments and improving code readability
-5. Creating documentation (README.md)
-6. Using Git for version control
+- A `Battleship` class that handles the game logic
+- A `play_game` function that manages the game flow
+- Input validation to handle incorrect user inputs
+- Clear user feedback for each action in the game
+
+Version control was managed using Git, with regular commits to track the development process.
 
 ## Future Improvements
 
-- Add multiple ships
-- Implement a larger grid
-- Create a graphical user interface
+- Implement multiple ships
+- Allow for a larger grid size
+- Add a graphical user interface
+
+## Deployment
+
+This game can be deployed to Heroku. Instructions for deployment will be added in future updates.
