@@ -1,1 +1,1 @@
-web: python battleship.py
+web: gunicorn battleship:app
