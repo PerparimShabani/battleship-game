@@ -20,6 +20,43 @@ This project was developed using Visual Studio Code on a Windows computer. The d
 5. Creating documentation (README.md)
 6. Using Git for version control
 
+## How to Play
+
+1. Run the `battleship.py` file using Python.
+2. Enter row and column numbers (0-4) to guess the ship's location.
+3. You have 5 turns to find the ship.
+4. 'X' marks your previous guesses on the board.
+
+## Requirements
+
+- Python 3.x
+
+## Installation
+
+1. Clone this repository:
+   ```
+   git clone https://github.com/PerparimShabani/battleship-game.git
+   ```
+2. Navigate to the project directory:
+   ```
+   cd battleship-game
+   ```
+3. Run the game:
+   ```
+   python battleship.py
+   ```
+
+## Development Process
+
+This project was developed using Visual Studio Code on a Windows computer. The development process included:
+
+1. Setting up the development environment
+2. Creating the main game logic
+3. Implementing input validation and error handling
+4. Adding comments and improving code readability
+5. Creating documentation (README.md)
+6. Using Git for version control
+
 ## Future Improvements
 
 - Add multiple ships
