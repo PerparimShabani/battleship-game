@@ -68,7 +68,7 @@ class Battleship:
         html += "</table>"
         return html
 
-HTML_TEMPLATE = '''
+HTML_TEMPLATE = """
 <!DOCTYPE html>
 <html>
 <head>
@@ -89,7 +89,7 @@ HTML_TEMPLATE = '''
     </form>
 </body>
 </html>
-'''
+"""
 
 game = Battleship()
 
