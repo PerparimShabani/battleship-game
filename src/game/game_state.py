@@ -1,3 +1,5 @@
+import copy
+
 class GameState:
     def __init__(self, board_size=5):
         self.board_size = board_size
@@ -20,4 +22,5 @@ class GameState:
         board[row][col] = value
         
     def get_board_state(self, is_player_board=True):
-        return [row[:] for row in (self.player_board_state if is_player_board else self.computer_board_state)]
+        board = self.player_board_state if is_player_board else self.computer_board_state
+        return copy.deepcopy(board)
