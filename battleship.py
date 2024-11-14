@@ -17,6 +17,7 @@ class Battleship:
         self.computer_ships = self.place_ships()
         self.player_guesses = set()
         self.computer_guesses = set()
+        self.guess_history = []  # Add this line to store game history
 
     def create_board(self):
         return [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
@@ -40,12 +41,13 @@ class Battleship:
         if (row, col) in self.computer_ships:
             self.computer_board[row][col] = 'X'
             self.computer_ships.remove((row, col))
-            if not self.computer_ships:
-                return "Congratulations! You sank all the computer's ships!"
-            return "Hit! You found a computer ship!"
+            result = "Congratulations! You sank all the computer's ships!" if not self.computer_ships else "Hit! You found a computer ship!"
         else:
             self.computer_board[row][col] = 'O'
-            return "Miss! No computer ship at this location."
+            result = "Miss! No computer ship at this location."
+            
+        self.guess_history.append(f"Player guessed ({row}, {col}): {result}")  # Add this line
+        return result
 
     def computer_turn(self):
         while True:
@@ -58,24 +60,32 @@ class Battleship:
         if (row, col) in self.player_ships:
             self.player_board[row][col] = 'X'
             self.player_ships.remove((row, col))
-            if not self.player_ships:
-                return "Game Over! The computer sank all your ships!"
-            return f"The computer hit your ship at ({row}, {col})!"
+            result = "Game Over! The computer sank all your ships!" if not self.player_ships else f"The computer hit your ship at ({row}, {col})!"
         else:
             self.player_board[row][col] = 'O'
-            return f"The computer missed at ({row}, {col})."
+            result = f"The computer missed at ({row}, {col})."
+            
+        self.guess_history.append(f"Computer: {result}")  # Add this line
+        return result
 
     def get_board_html(self, board, guesses):
         html = "<table>"
         for i, row in enumerate(board):
             html += "<tr>"
             for j, cell in enumerate(row):
+                cell_class = ""
                 if (i, j) in guesses:
-                    html += f"<td>{cell}</td>"
-                else:
-                    html += "<td> </td>"
+                    cell_class = "hit" if cell == 'X' else "miss"
+                html += f'<td class="{cell_class}">{cell if (i, j) in guesses else " "}</td>'
             html += "</tr>"
         html += "</table>"
+        return html
+
+    def get_guess_history_html(self):  # Add this method
+        html = "<ul>"
+        for move in self.guess_history:
+            html += f"<li>{move}</li>"
+        html += "</ul>"
         return html
 
 game = Battleship()
@@ -91,6 +101,27 @@ HTML_TEMPLATE = '''
         table { border-collapse: collapse; margin-bottom: 20px; }
         td { width: 30px; height: 30px; border: 1px solid black; text-align: center; }
         .board-container { display: flex; justify-content: space-around; }
+        .hit { background-color: #ef5350; color: white; }
+        .miss { background-color: #90caf9; color: white; }
+        .guess-history {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .guess-history ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .guess-history li {
+            margin: 5px 0;
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
     </style>
 </head>
 <body>
@@ -106,6 +137,12 @@ HTML_TEMPLATE = '''
             {{ computer_board_html | safe }}
         </div>
     </div>
+    
+    <div class="guess-history">
+        <h3>Game History</h3>
+        {{ guess_history_html | safe }}
+    </div>
+
     <form method="post">
         Row: <input type="number" name="row" min="0" max="{{ max_index }}" required>
         Col: <input type="number" name="col" min="0" max="{{ max_index }}" required>
@@ -131,8 +168,13 @@ def web_game():
 
     player_board_html = game.get_board_html(game.player_board, game.computer_guesses)
     computer_board_html = game.get_board_html(game.computer_board, game.player_guesses)
-    return render_template_string(HTML_TEMPLATE, message=message, player_board_html=player_board_html, 
-                                  computer_board_html=computer_board_html, max_index=game.board_size-1)
+    guess_history_html = game.get_guess_history_html()  # Add this line
+    return render_template_string(HTML_TEMPLATE, 
+                                message=message, 
+                                player_board_html=player_board_html,
+                                computer_board_html=computer_board_html,
+                                guess_history_html=guess_history_html,  # Add this line
+                                max_index=game.board_size-1)
 
 @app.route('/reset', methods=['POST'])
 def reset_game():
