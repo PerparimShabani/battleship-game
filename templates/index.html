@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Battleship Game</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      table {
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      td {
+        width: 40px;
+        height: 40px;
+        border: 1px solid #ccc;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .hit {
+        background-color: #ef5350;
+        color: white;
+      }
+
+      .miss {
+        background-color: #90caf9;
+        color: white;
+      }
+
+      .board-container {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .board-section {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .guess-history {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+      }
+
+      .guess-history ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .guess-history li {
+        margin: 5px 0;
+        padding: 5px;
+        border-bottom: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Battleship Game</h1>
+    <p>{{ message }}</p>
+    <div class="board-container">
+      <div class="board-section">
+        <h2>Your Board</h2>
+        {{ player_board_html | safe }}
+      </div>
+      <div class="board-section">
+        <h2>Computer's Board</h2>
+        {{ computer_board_html | safe }}
+      </div>
+    </div>
+    {{ guess_history_html | safe }}
+    <form method="post">
+      Row:
+      <input type="number" name="row" min="0" max="{{ max_index }}" required />
+      Col:
+      <input type="number" name="col" min="0" max="{{ max_index }}" required />
+      <input type="submit" value="Guess" />
+    </form>
+    <form method="post" action="/reset">
+      <input type="submit" value="Reset Game" />
+    </form>
+  </body>
+</html>
