@@ -13,12 +13,11 @@ class GameState:
         self.player_guesses = set()
         self.computer_guesses = set()
         self.guess_history = []
+        self.game_over = False
         
     def update_board(self, row, col, value, is_player_board=True):
-        if is_player_board:
-            self.player_board_state[row][col] = value
-        else:
-            self.computer_board_state[row][col] = value
-            
+        board = self.player_board_state if is_player_board else self.computer_board_state
+        board[row][col] = value
+        
     def get_board_state(self, is_player_board=True):
-        return self.player_board_state if is_player_board else self.computer_board_state
+        return [row[:] for row in (self.player_board_state if is_player_board else self.computer_board_state)]

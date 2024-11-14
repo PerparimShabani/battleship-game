@@ -17,7 +17,11 @@ class Board:
         if (row, col) in self.state.computer_ships:
             self.state.update_board(row, col, 'X', is_player_board=False)
             self.state.computer_ships.remove((row, col))
-            result = "Congratulations! You sank all the computer's ships!" if not self.state.computer_ships else "Hit! You found a computer ship!"
+            if not self.state.computer_ships:
+                self.state.game_over = True
+                result = "Congratulations! You sank all the computer's ships!"
+            else:
+                result = "Hit! You found a computer ship!"
             self.state.guess_history.append(result)
             return result, True
         else:
@@ -27,6 +31,9 @@ class Board:
             return result, True
 
     def make_computer_guess(self):
+        if self.state.game_over:
+            return "Game is already over!"
+
         row, col = self._get_random_guess()
         self.state.computer_guesses.add((row, col))
         self.state.guess_history.append(f"Computer guessed ({row}, {col})")
@@ -34,7 +41,11 @@ class Board:
         if (row, col) in self.state.player_ships:
             self.state.update_board(row, col, 'X', is_player_board=True)
             self.state.player_ships.remove((row, col))
-            result = "Game Over! The computer sank all your ships!" if not self.state.player_ships else f"The computer hit your ship at ({row}, {col})!"
+            if not self.state.player_ships:
+                self.state.game_over = True
+                result = "Game Over! The computer sank all your ships!"
+            else:
+                result = f"The computer hit your ship at ({row}, {col})!"
             self.state.guess_history.append(result)
             return result
         else:
