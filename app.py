@@ -1,9 +1,9 @@
-from flask import Flask, request, render_template_string
-from src.game import game
+from flask import Flask, request, render_template
+from src.game import Battleship
 import os
 
 app = Flask(__name__)
-
+game = Battleship()
 
 @app.route('/', methods=['GET', 'POST'])
 def web_game():
@@ -23,13 +23,12 @@ def web_game():
     computer_board_html = game.get_computer_board_html()
     guess_history_html = game.get_guess_history_html()
     
-    return render_template_string('index.html',
-                                message=message, 
-                                player_board_html=player_board_html,
-                                computer_board_html=computer_board_html,
-                                guess_history_html=guess_history_html,
-                                max_index=game.state.board_size-1)
-
+    return render_template('index.html', 
+                         message=message, 
+                         player_board_html=player_board_html,
+                         computer_board_html=computer_board_html,
+                         guess_history_html=guess_history_html,
+                         max_index=game.state.board_size-1)
 
 @app.route('/reset', methods=['POST'])
 def reset_game():
