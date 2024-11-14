@@ -15,13 +15,13 @@ class Board:
         self.state.guess_history.append(f"Player guessed ({row}, {col})")
 
         if (row, col) in self.state.computer_ships:
-            self.state.computer_board_state[row][col] = 'X'
+            self.state.update_board(row, col, 'X', is_player_board=False)
             self.state.computer_ships.remove((row, col))
             result = "Congratulations! You sank all the computer's ships!" if not self.state.computer_ships else "Hit! You found a computer ship!"
             self.state.guess_history.append(result)
             return result, True
         else:
-            self.state.computer_board_state[row][col] = 'O'
+            self.state.update_board(row, col, 'O', is_player_board=False)
             result = "Miss! No computer ship at this location."
             self.state.guess_history.append(result)
             return result, True
@@ -32,13 +32,13 @@ class Board:
         self.state.guess_history.append(f"Computer guessed ({row}, {col})")
 
         if (row, col) in self.state.player_ships:
-            self.state.player_board_state[row][col] = 'X'
+            self.state.update_board(row, col, 'X', is_player_board=True)
             self.state.player_ships.remove((row, col))
             result = "Game Over! The computer sank all your ships!" if not self.state.player_ships else f"The computer hit your ship at ({row}, {col})!"
             self.state.guess_history.append(result)
             return result
         else:
-            self.state.player_board_state[row][col] = 'O'
+            self.state.update_board(row, col, 'O', is_player_board=True)
             result = f"The computer missed at ({row}, {col})."
             self.state.guess_history.append(result)
             return result

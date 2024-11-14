@@ -5,6 +5,7 @@ class GameState:
         self.reset()
     
     def reset(self):
+        # Initialize empty boards with spaces
         self.player_board_state = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
         self.computer_board_state = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
         self.player_ships = set()
@@ -12,3 +13,12 @@ class GameState:
         self.player_guesses = set()
         self.computer_guesses = set()
         self.guess_history = []
+        
+    def update_board(self, row, col, value, is_player_board=True):
+        if is_player_board:
+            self.player_board_state[row][col] = value
+        else:
+            self.computer_board_state[row][col] = value
+            
+    def get_board_state(self, is_player_board=True):
+        return self.player_board_state if is_player_board else self.computer_board_state
