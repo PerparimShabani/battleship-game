@@ -2,7 +2,7 @@ from flask import Flask, request, render_template
 from src.game import Battleship
 import os
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='templates')
 game = Battleship()
 
 @app.route('/', methods=['GET', 'POST'])
