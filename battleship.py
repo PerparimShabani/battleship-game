@@ -17,7 +17,10 @@ class Battleship:
         self.computer_ships = self.place_ships()
         self.player_guesses = set()
         self.computer_guesses = set()
-        self.guess_history = []  # Add guess history list
+        self.guess_history = []
+        # Initialize board states to track hits and misses
+        self.player_board_state = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
+        self.computer_board_state = [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
 
     def create_board(self):
         return [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
@@ -40,13 +43,13 @@ class Battleship:
         self.guess_history.append(f"Player guessed ({row}, {col})")
 
         if (row, col) in self.computer_ships:
-            self.computer_board[row][col] = 'X'
+            self.computer_board_state[row][col] = 'X'  # Update board state
             self.computer_ships.remove((row, col))
             result = "Congratulations! You sank all the computer's ships!" if not self.computer_ships else "Hit! You found a computer ship!"
             self.guess_history.append(result)
             return result, True
         else:
-            self.computer_board[row][col] = 'O'
+            self.computer_board_state[row][col] = 'O'  # Update board state
             result = "Miss! No computer ship at this location."
             self.guess_history.append(result)
             return result, True
@@ -61,26 +64,29 @@ class Battleship:
         self.guess_history.append(f"Computer guessed ({row}, {col})")
 
         if (row, col) in self.player_ships:
-            self.player_board[row][col] = 'X'
+            self.player_board_state[row][col] = 'X'  # Update board state
             self.player_ships.remove((row, col))
             result = "Game Over! The computer sank all your ships!" if not self.player_ships else f"The computer hit your ship at ({row}, {col})!"
             self.guess_history.append(result)
             return result
         else:
-            self.player_board[row][col] = 'O'
+            self.player_board_state[row][col] = 'O'  # Update board state
             result = f"The computer missed at ({row}, {col})."
             self.guess_history.append(result)
             return result
 
-    def get_board_html(self, board, guesses):
+    def get_board_html(self, board_state, guesses):
         html = "<table>"
-        for i, row in enumerate(board):
+        for i in range(self.board_size):
             html += "<tr>"
-            for j, cell in enumerate(row):
+            for j in range(self.board_size):
+                cell_content = board_state[i][j]
                 cell_class = ""
-                if (i, j) in guesses:
-                    cell_class = "hit" if cell == 'X' else "miss"
-                html += f'<td class="{cell_class}">{cell if (i, j) in guesses else " "}</td>'
+                if cell_content == 'X':
+                    cell_class = "hit"
+                elif cell_content == 'O':
+                    cell_class = "miss"
+                html += f'<td class="{cell_class}">{cell_content if cell_content != " " else "&nbsp;"}</td>'
             html += "</tr>"
         html += "</table>"
         return html
@@ -94,8 +100,6 @@ class Battleship:
 
 game = Battleship()
 
-game = Battleship()
-
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
 <html lang="en">
@@ -104,23 +108,34 @@ HTML_TEMPLATE = '''
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Battleship Game</title>
     <style>
-        table { border-collapse: collapse; margin-bottom: 20px; }
-        td { 
-            width: 30px; 
-            height: 30px; 
-            border: 1px solid black; 
-            text-align: center; 
+        table { 
+            border-collapse: collapse; 
+            margin-bottom: 20px; 
         }
-        .board-container { display: flex; justify-content: space-around; }
-        .hit { background-color: #ef5350; color: white; }
-        .miss { background-color: #90caf9; color: white; }
-          .guess-history {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
+        td { 
+            width: 40px; 
+            height: 40px; 
+            border: 1px solid black; 
+            text-align: center;
+            font-weight: bold;
+        }
+        .board-container { 
+            display: flex; 
+            justify-content: space-around; 
+        }
+        .hit { 
+            background-color: #ef5350; 
+            color: white; 
+        }
+        .miss { 
+            background-color: #90caf9; 
+            color: white; 
+        }
+        .guess-history {
             margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
+            padding: 10px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
         }
         .guess-history ul {
             list-style-type: none;
@@ -131,7 +146,6 @@ HTML_TEMPLATE = '''
             margin: 5px 0;
             padding: 8px;
             border-bottom: 1px solid #ddd;
-            font-size: 14px;
         }
     </style>
 </head>
@@ -178,8 +192,8 @@ def web_game():
         except ValueError:
             message = "Please enter valid numbers for row and column."
 
-    player_board_html = game.get_board_html(game.player_board, game.computer_guesses)
-    computer_board_html = game.get_board_html(game.computer_board, game.player_guesses)
+    player_board_html = game.get_board_html(game.player_board_state, game.computer_guesses)
+    computer_board_html = game.get_board_html(game.computer_board_state, game.player_guesses)
     guess_history_html = game.get_guess_history_html()
     
     return render_template_string(HTML_TEMPLATE, 
