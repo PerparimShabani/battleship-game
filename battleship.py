@@ -94,6 +94,8 @@ class Battleship:
 
 game = Battleship()
 
+game = Battleship()
+
 HTML_TEMPLATE = '''
 <!DOCTYPE html>
 <html lang="en">
@@ -103,29 +105,15 @@ HTML_TEMPLATE = '''
     <title>Battleship Game</title>
     <style>
         table { border-collapse: collapse; margin-bottom: 20px; }
-        td { width: 30px; height: 30px; border: 1px solid black; text-align: center; }
+        td { 
+            width: 30px; 
+            height: 30px; 
+            border: 1px solid black; 
+            text-align: center; 
+        }
         .board-container { display: flex; justify-content: space-around; }
         .hit { background-color: #ef5350; color: white; }
         .miss { background-color: #90caf9; color: white; }
-        .guess-history {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .guess-history ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-        .guess-history li {
-            margin: 5px 0;
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            font-size: 14px;
-        }
     </style>
 </head>
 <body>
@@ -141,12 +129,10 @@ HTML_TEMPLATE = '''
             {{ computer_board_html | safe }}
         </div>
     </div>
-    
     <div class="guess-history">
         <h3>Game History</h3>
         {{ guess_history_html | safe }}
     </div>
-
     <form method="post">
         Row: <input type="number" name="row" min="0" max="{{ max_index }}" required>
         Col: <input type="number" name="col" min="0" max="{{ max_index }}" required>
