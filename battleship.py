@@ -17,7 +17,7 @@ class Battleship:
         self.computer_ships = self.place_ships()
         self.player_guesses = set()
         self.computer_guesses = set()
-        self.guess_history = []  # Add this line to store game history
+        self.guess_history = []  # Add guess history list
 
     def create_board(self):
         return [[' ' for _ in range(self.board_size)] for _ in range(self.board_size)]
@@ -31,23 +31,25 @@ class Battleship:
 
     def make_guess(self, row, col):
         if not (0 <= row < self.board_size and 0 <= col < self.board_size):
-            return "Invalid guess! Please enter coordinates within the grid."
+            return "Invalid guess! Please enter coordinates within the grid.", False
 
         if (row, col) in self.player_guesses:
-            return "You already guessed that!"
+            return "You already guessed that!", False
 
         self.player_guesses.add((row, col))
+        self.guess_history.append(f"Player guessed ({row}, {col})")
 
         if (row, col) in self.computer_ships:
             self.computer_board[row][col] = 'X'
             self.computer_ships.remove((row, col))
             result = "Congratulations! You sank all the computer's ships!" if not self.computer_ships else "Hit! You found a computer ship!"
+            self.guess_history.append(result)
+            return result, True
         else:
             self.computer_board[row][col] = 'O'
             result = "Miss! No computer ship at this location."
-            
-        self.guess_history.append(f"Player guessed ({row}, {col}): {result}")  # Add this line
-        return result
+            self.guess_history.append(result)
+            return result, True
 
     def computer_turn(self):
         while True:
@@ -56,17 +58,19 @@ class Battleship:
                 break
 
         self.computer_guesses.add((row, col))
+        self.guess_history.append(f"Computer guessed ({row}, {col})")
 
         if (row, col) in self.player_ships:
             self.player_board[row][col] = 'X'
             self.player_ships.remove((row, col))
             result = "Game Over! The computer sank all your ships!" if not self.player_ships else f"The computer hit your ship at ({row}, {col})!"
+            self.guess_history.append(result)
+            return result
         else:
             self.player_board[row][col] = 'O'
             result = f"The computer missed at ({row}, {col})."
-            
-        self.guess_history.append(f"Computer: {result}")  # Add this line
-        return result
+            self.guess_history.append(result)
+            return result
 
     def get_board_html(self, board, guesses):
         html = "<table>"
@@ -81,7 +85,7 @@ class Battleship:
         html += "</table>"
         return html
 
-    def get_guess_history_html(self):  # Add this method
+    def get_guess_history_html(self):
         html = "<ul>"
         for move in self.guess_history:
             html += f"<li>{move}</li>"
@@ -159,21 +163,25 @@ HTML_TEMPLATE = '''
 def web_game():
     message = "Welcome to Battleship! Make your guess."
     if request.method == 'POST':
-        row = int(request.form['row'])
-        col = int(request.form['col'])
-        message = game.make_guess(row, col)
-        if "Congratulations" not in message and "Game Over" not in message:
-            computer_message = game.computer_turn()
-            message += " " + computer_message
+        try:
+            row = int(request.form['row'])
+            col = int(request.form['col'])
+            message, valid_guess = game.make_guess(row, col)
+            if valid_guess and "Congratulations" not in message and "Game Over" not in message:
+                computer_message = game.computer_turn()
+                message += " " + computer_message
+        except ValueError:
+            message = "Please enter valid numbers for row and column."
 
     player_board_html = game.get_board_html(game.player_board, game.computer_guesses)
     computer_board_html = game.get_board_html(game.computer_board, game.player_guesses)
-    guess_history_html = game.get_guess_history_html()  # Add this line
+    guess_history_html = game.get_guess_history_html()
+    
     return render_template_string(HTML_TEMPLATE, 
                                 message=message, 
                                 player_board_html=player_board_html,
                                 computer_board_html=computer_board_html,
-                                guess_history_html=guess_history_html,  # Add this line
+                                guess_history_html=guess_history_html,
                                 max_index=game.board_size-1)
 
 @app.route('/reset', methods=['POST'])
