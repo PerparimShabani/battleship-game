@@ -1,1 +1,1 @@
-web: gunicorn battleship:app
+web: gunicorn app:app
