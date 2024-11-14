@@ -23,12 +23,13 @@ def web_game():
     computer_board_html = game.get_computer_board_html()
     guess_history_html = game.get_guess_history_html()
     
-    return render_template_string(HTML_TEMPLATE, 
+    return render_template_string('index.html',
                                 message=message, 
                                 player_board_html=player_board_html,
                                 computer_board_html=computer_board_html,
                                 guess_history_html=guess_history_html,
                                 max_index=game.state.board_size-1)
+
 
 @app.route('/reset', methods=['POST'])
 def reset_game():
