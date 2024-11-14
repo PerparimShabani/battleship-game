@@ -4,7 +4,6 @@ import os
 
 app = Flask(__name__)
 
-# ... keep existing code (HTML_TEMPLATE)
 
 @app.route('/', methods=['GET', 'POST'])
 def web_game():
