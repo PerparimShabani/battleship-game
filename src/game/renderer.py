@@ -17,7 +17,7 @@ class BoardRenderer:
 
     def get_guess_history_html(self, guess_history):
         html = "<ul>"
-        for move in reversed(guess_history[-50:]):  # Show only last 50 moves
+        for move in reversed(guess_history[-50:]):  # Show last 50 moves
             html += f"<li>{move}</li>"
         html += "</ul>"
         return html
