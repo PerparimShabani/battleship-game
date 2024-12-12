@@ -19,7 +19,7 @@ class Board:
             self.state.computer_ships.remove((row, col))
             if not self.state.computer_ships:
                 self.state.game_over = True
-                result = "Congratulations! You sank all the computer's ships!"
+                result = "Hit! Congratulations! You sank all the computer's ships!"
             else:
                 result = "Hit! You found a computer ship!"
             self.state.guess_history.append(result)
@@ -43,7 +43,7 @@ class Board:
             self.state.player_ships.remove((row, col))
             if not self.state.player_ships:
                 self.state.game_over = True
-                result = "Game Over! The computer sank all your ships!"
+                result = "The computer hit your ship and sank all your ships! Game Over!"
             else:
                 result = f"The computer hit your ship at ({row}, {col})!"
             self.state.guess_history.append(result)
