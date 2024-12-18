@@ -12,7 +12,7 @@ class Board:
             return "You already guessed that!", False
 
         self.state.player_guesses.add((row, col))
-        self.state.guess_history.append(f"Player guessed ({row}, {col})")
+        self.state.guess_history.append(f"Player guessed ({row + 1}, {col + 1})")
 
         if (row, col) in self.state.computer_ships:
             self.state.update_board(row, col, 'X', is_player_board=False)
@@ -36,7 +36,7 @@ class Board:
 
         row, col = self._get_random_guess()
         self.state.computer_guesses.add((row, col))
-        self.state.guess_history.append(f"Computer guessed ({row}, {col})")
+        self.state.guess_history.append(f"Computer guessed ({row + 1}, {col + 1})")
 
         if (row, col) in self.state.player_ships:
             self.state.update_board(row, col, 'X', is_player_board=True)
@@ -45,12 +45,12 @@ class Board:
                 self.state.game_over = True
                 result = "The computer hit your ship and sank all your ships! Game Over!"
             else:
-                result = f"The computer hit your ship at ({row}, {col})!"
+                result = f"The computer hit your ship at ({row + 1}, {col + 1})!"
             self.state.guess_history.append(result)
             return result
         else:
             self.state.update_board(row, col, 'O', is_player_board=True)
-            result = f"The computer missed at ({row}, {col})."
+            result = f"The computer missed at ({row + 1}, {col + 1})."
             self.state.guess_history.append(result)
             return result
 
@@ -61,5 +61,5 @@ class Board:
         while True:
             row = random.randint(0, self.state.board_size - 1)
             col = random.randint(0, self.state.board_size - 1)
-            if (row, col) not in self.state.computer_guesses:
+            if (row, col) not in self.state.computer_guesses and self._is_valid_guess(row, col):
                 return row, col

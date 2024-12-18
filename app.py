@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, redirect
 from src.game import Battleship
 import os
 
@@ -30,6 +30,12 @@ def web_game():
                          computer_board_html=computer_board_html,
                          guess_history_html=guess_history_html,
                          max_index=game.state.board_size)  # Changed from board_size-1 to board_size
+
+@app.route('/reset', methods=['GET', 'POST'])
+def reset_game():
+    game.reset_game()
+    return redirect('/')
+
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))

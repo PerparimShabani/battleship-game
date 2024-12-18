@@ -18,8 +18,10 @@ class GameState:
         self.game_over = False
         
     def update_board(self, row, col, value, is_player_board=True):
-        board = self.player_board_state if is_player_board else self.computer_board_state
-        board[row][col] = value
+        if is_player_board:
+            self.player_board_state[row][col] = value
+        else:
+           self.computer_board_state[row][col] = value
         
     def get_board_state(self, is_player_board=True):
         board = self.player_board_state if is_player_board else self.computer_board_state
