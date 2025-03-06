@@ -39,7 +39,3 @@ Version control was managed using Git, with regular commits to track the develop
 - Implement multiple ships
 - Allow for a larger grid size
 - Add a graphical user interface
-
-## Deployment
-
-This game can be deployed to Heroku. Instructions for deployment will be added in future updates.
