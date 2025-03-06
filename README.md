@@ -17,12 +17,6 @@ This is a simple implementation of the classic Battleship game using Python. The
 4. The game will inform you if you've hit or missed the ship.
 5. Try to sink the ship within 10 turns!
 
-## Installation
-
-1. Ensure you have Python installed on your system.
-2. Clone this repository or download the `battleship.py` file.
-3. Run the game using the command: `python battleship.py`
-
 ## Development Process
 
 This game was developed using Python and follows object-oriented programming principles. The main components include:
